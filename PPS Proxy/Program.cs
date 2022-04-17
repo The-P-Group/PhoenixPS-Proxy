@@ -28,22 +28,23 @@ Task OnRequest(object sender, SessionEventArgs e)
             }
 #endif
 
-            UriBuilder uriBuilder = new UriBuilder();
+            var https = e.HttpClient.Request.IsHttps;
 
-            uriBuilder.Scheme = "http";
+            var hostUrl = e.HttpClient.Request.Host;
+            var fullUrl = e.HttpClient.Request.Url.ToString();
 
-            uriBuilder.Host = "localhost";
+            var newUrl = fullUrl.Replace(hostUrl, "localhost");
 
-            uriBuilder.Path = e.HttpClient.Request.RequestUriString;
-
-            Uri uri = uriBuilder.Uri;
+            if (https)
+            {
+                newUrl = newUrl.Replace("https", "http");
+            }
 
             //Console.WriteLine(newUrl);
 
-            var hostUrl = e.HttpClient.Request.Host;
             Console.WriteLine("Redirect " + hostUrl + " to localhost");
 
-            e.Redirect(uri.ToString());
+            e.Redirect(newUrl);
 
         }
     }
