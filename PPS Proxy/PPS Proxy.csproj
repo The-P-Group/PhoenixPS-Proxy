@@ -1,17 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net5.0</TargetFrameworks>
-    <RootNamespace>PPS_Proxy</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFrameworks>net6.0;net5.0</TargetFrameworks>
+		<RootNamespace>PPS_Proxy</RootNamespace>
+		<Nullable>enable</Nullable>
+		<SignAssembly>False</SignAssembly>
+		<Authors>Lucas</Authors>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<VersionPrefix>1.1.0</VersionPrefix>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<PackageIcon>icon-trans.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/The-P-Group/PhoenixPS-Proxy</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
-    <PackageReference Include="Titanium.Web.Proxy" Version="3.1.1397" />
-  </ItemGroup>
+	<ItemGroup>
+	  <Content Include="icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\assets\icon-trans.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+		<PackageReference Include="Titanium.Web.Proxy" Version="3.1.1397" />
+	</ItemGroup>
 
 </Project>
