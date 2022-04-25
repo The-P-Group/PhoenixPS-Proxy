@@ -1,5 +1,4 @@
 ﻿# PhoenixPS-Proxy
-﻿
 ## The 1st Unreliable Proxy. But ~~better~~ than Fiddler
 
 ## Note
