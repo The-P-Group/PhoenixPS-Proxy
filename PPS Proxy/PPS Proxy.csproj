@@ -7,7 +7,7 @@
 		<Nullable>enable</Nullable>
 		<SignAssembly>False</SignAssembly>
 		<Authors>Lucas</Authors>
-		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<AssemblyName>PPS_Proxy</AssemblyName>
 		<VersionPrefix>1.1.0</VersionPrefix>
 		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<PackageIcon>icon-trans.png</PackageIcon>
