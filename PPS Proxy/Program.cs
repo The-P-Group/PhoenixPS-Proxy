@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Net;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using Titanium.Web.Proxy;
 using Titanium.Web.Proxy.EventArguments;
 using Titanium.Web.Proxy.Models;
+using IniParser;
+using IniParser.Model;
 
-var forwardUrl = ConfigurationManager.AppSettings["FORWARD_URL"] ?? "http://localhost";
-var listenPort = Int32.Parse(ConfigurationManager.AppSettings["PROXY_LISTEN_PORT"] ?? "8080");
-var parseBody = bool.Parse(ConfigurationManager.AppSettings["PARSE_BODY"] ?? "false");
+var parser = new FileIniDataParser();
+IniData appConfig = parser.ReadFile("Configuration.ini");
+
+string forwardUrl = appConfig["AppConfiguration"]["FORWARD_URL"] ?? "http://localhost";
+int listenPort = Int32.Parse(appConfig["AppConfiguration"]["PROXY_PORT"] ?? "8080");
+bool parseBody = bool.Parse(appConfig["AppConfiguration"]["PARSE_BODY"] ?? "false");
 
 Task OnRequest(object sender, SessionEventArgs e)
 {
