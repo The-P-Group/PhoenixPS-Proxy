@@ -11,7 +11,9 @@ using IniParser.Model;
 var parser = new FileIniDataParser();
 IniData appConfig = parser.ReadFile("Configuration.ini");
 
-string forwardUrl = appConfig["AppConfiguration"]["FORWARD_URL"] ?? "http://localhost";
+string forwardHost = appConfig["AppConfiguration"]["FORWARD_HOST"] ?? "localhost";
+string schemaUrl = appConfig["AppConfiguration"]["SCHEMA_URL"] ?? "http";
+string forceSchema = appConfig["AppConfiguration"]["FORCE_SCHEMA"] ?? "false";
 int listenPort = Int32.Parse(appConfig["AppConfiguration"]["PROXY_PORT"] ?? "8080");
 bool parseBody = bool.Parse(appConfig["AppConfiguration"]["PARSE_BODY"] ?? "false");
 
@@ -27,13 +29,21 @@ Task OnRequest(object sender, SessionEventArgs e)
             Console.WriteLine(e.GetRequestBodyAsString().Result);
         }
 
-        var hostUrl = e.HttpClient.Request.Host is not null ? e.HttpClient.Request.Host : e.HttpClient.Request.RequestUri.Host;
+        string requestSchema = forceSchema is "true" ? schemaUrl : e.HttpClient.Request.RequestUri.Scheme;
 
-        var abPath = e.HttpClient.Request.RequestUri.AbsolutePath;
+        string hostUrl = e.HttpClient.Request.Host is not null ? e.HttpClient.Request.Host : e.HttpClient.Request.RequestUri.Host;
 
-        e.HttpClient.Request.RequestUri = new Uri(forwardUrl + abPath);
+        string abPath = e.HttpClient.Request.RequestUri.AbsolutePath;
 
-        Console.WriteLine("Redirected {0} to {1}", hostUrl, forwardUrl.Replace("http://", ""));
+        var builder = new UriBuilder();
+
+        builder.Scheme = requestSchema;
+        builder.Host = forwardHost;
+        builder.Path = abPath;
+
+        e.HttpClient.Request.RequestUri = builder.Uri;
+
+        Console.WriteLine("Redirected {0} to {1}", hostUrl, forwardHost);
     }
 
     return Task.CompletedTask;
