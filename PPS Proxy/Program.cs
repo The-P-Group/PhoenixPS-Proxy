@@ -13,7 +13,7 @@ IniData appConfig = parser.ReadFile("Configuration.ini");
 
 string forwardHost = appConfig["AppConfiguration"]["FORWARD_HOST"] ?? "localhost";
 string schemaUrl = appConfig["AppConfiguration"]["SCHEMA_URL"] ?? "http";
-string forceSchema = appConfig["AppConfiguration"]["FORCE_SCHEMA"] ?? "false";
+string forceSchema = appConfig["AppConfiguration"]["FORCE_SCHEMA"] ?? "true";
 int listenPort = Int32.Parse(appConfig["AppConfiguration"]["PROXY_PORT"] ?? "8080");
 bool parseBody = bool.Parse(appConfig["AppConfiguration"]["PARSE_BODY"] ?? "false");
 
@@ -33,7 +33,7 @@ Task OnRequest(object sender, SessionEventArgs e)
 
         string hostUrl = e.HttpClient.Request.Host is not null ? e.HttpClient.Request.Host : e.HttpClient.Request.RequestUri.Host;
 
-        string abPath = e.HttpClient.Request.RequestUri.AbsolutePath;
+        string abPath = e.HttpClient.Request.RequestUri.PathAndQuery;
 
         var builder = new UriBuilder();
 
