@@ -7,6 +7,7 @@ using Titanium.Web.Proxy.EventArguments;
 using Titanium.Web.Proxy.Models;
 using IniParser;
 using IniParser.Model;
+using System.Web;
 
 var parser = new FileIniDataParser();
 IniData appConfig = parser.ReadFile("Configuration.ini");
@@ -41,7 +42,7 @@ Task OnRequest(object sender, SessionEventArgs e)
         builder.Host = forwardHost;
         builder.Path = abPath;
 
-        e.HttpClient.Request.RequestUri = builder.Uri;
+        e.HttpClient.Request.RequestUri = new Uri(Uri.UnescapeDataString(builder.Uri.ToString()));
 
         Console.WriteLine("Redirected {0} to {1}", hostUrl, forwardHost);
     }
