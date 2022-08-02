@@ -14,13 +14,13 @@ IniData appConfig = parser.ReadFile("Configuration.ini");
 
 string forwardHost = appConfig["AppConfiguration"]["FORWARD_HOST"] ?? "localhost";
 string schemaUrl = appConfig["AppConfiguration"]["SCHEMA_URL"] ?? "http";
-string forceSchema = appConfig["AppConfiguration"]["FORCE_SCHEMA"] ?? "true";
+string forceSchema = appConfig["AppConfiguration"]["FORCE_SCHEMA"] ?? "false";
 int listenPort = Int32.Parse(appConfig["AppConfiguration"]["PROXY_PORT"] ?? "8080");
 bool parseBody = bool.Parse(appConfig["AppConfiguration"]["PARSE_BODY"] ?? "false");
 
 Task OnRequest(object sender, SessionEventArgs e)
 {
-    string[] listDomain = { "mihoyo", "hoyoverse", "yuanshen", "18.222.82.186:22401" };
+    string[] listDomain = { "mihoyo.com", "hoyoverse.com", "yuanshen.com", "18.222.82.186:22401", "starrails.com" };
 
     if (listDomain.Any(e.HttpClient.Request.RequestUri.AbsoluteUri.Contains))
     {
@@ -34,15 +34,30 @@ Task OnRequest(object sender, SessionEventArgs e)
 
         string hostUrl = e.HttpClient.Request.Host is not null ? e.HttpClient.Request.Host : e.HttpClient.Request.RequestUri.Host;
 
-        string abPath = e.HttpClient.Request.RequestUri.PathAndQuery;
+        string path = e.HttpClient.Request.RequestUri.AbsolutePath;
+        string query = e.HttpClient.Request.RequestUri.Query;
 
         var builder = new UriBuilder();
 
         builder.Scheme = requestSchema;
         builder.Host = forwardHost;
-        builder.Path = abPath;
+        builder.Path = path;
+        builder.Query = query;
 
-        e.HttpClient.Request.RequestUri = new Uri(Uri.UnescapeDataString(builder.Uri.ToString()));
+        var fullUrl = e.HttpClient.Request.Url.ToString();
+
+        var newUrl = fullUrl.Replace(hostUrl, "localhost");
+
+
+
+        //Console.WriteLine(builder.ToString());
+
+        e.HttpClient.Request.RequestUri = new Uri(builder.Uri.ToString());
+        //e.HttpClient.Request.RequestUri = new Uri(newUrl);
+
+        //e.HttpClient.Request.Host = "localhost";
+
+        Console.WriteLine(e.HttpClient.Request.Url.ToString());
 
         Console.WriteLine("Redirected {0} to {1}", hostUrl, forwardHost);
     }
